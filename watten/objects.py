@@ -1,20 +1,36 @@
 import math
 import random
 
+from watten.tools import convert_to_readable
+
 
 class CardBase:
     def __init__(self, card_id: int):
+        """
+        The Base Class of a Card to represent a Playing-Card
+
+        :param card_id: The id of the card
+        """
         self.card_id: int = card_id
 
     def __int__(self):
+        # Returns the id of the given card
         return int(self.card_id)
 
     def __repr__(self):
-        return str(self.card_id)
+        # Returns the representation of the given card
+        color, name = convert_to_readable(int(self))
+        return f"<CardBase color={color}, name={name}>"
 
     def __eq__(self, other):
+        # Checks if a card has the same color as another one
         if isinstance(other, CardBase):
-            if math.floor(self.card_id / 8) == math.floor(other.card_id / 8):
+            if math.floor(int(self) / 8) == math.floor(int(other) / 8):
+                return True
+            else:
+                return False
+        elif isinstance(other, int):
+            if math.floor(self.card_id / 8) == math.floor(other / 8):
                 return True
             else:
                 return False
@@ -24,7 +40,7 @@ class CardBase:
     def __gt__(self, other):
         if isinstance(other, CardBase):
             if other == self:
-                if (self.card_id % 8) > (other.card_id % 8):
+                if (int(self) % 8) > (int(other) % 8):
                     return True
                 else:
                     return False
@@ -35,7 +51,7 @@ class CardBase:
     def __lt__(self, other):
         if isinstance(other, CardBase):
             if other == self:
-                if (self.card_id % 8) < (other.card_id % 8):
+                if (int(self) % 8) < (int(other) % 8):
                     return True
                 else:
                     return False
