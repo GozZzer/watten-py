@@ -62,6 +62,11 @@ class CardBase:
 
 class CardDek:
     def __init__(self, cards: list[CardBase]):
+        """
+        Create a new deck of Cards
+
+        :param cards: The list of cards a Dek includes
+        """
         self.cards: list = cards
 
     def __repr__(self):
@@ -77,23 +82,45 @@ class CardDek:
         return len(self.cards)
 
     def deal_top_card(self, cards=1):
+        """
+        Return an amount of cards and delete them from the deck
+
+        :param cards: The amount of cards
+        :return: The selected cards
+        """
         tc = self.cards[:cards]
         self.cards = self.cards[cards:]
         return tc
 
-
     @staticmethod
     def mix(cards: list[CardBase]) -> list[CardBase]:
+        """
+        Mix a deck of cards
+
+        :param cards: The dek of cards to mix
+        :return: The mixed dek
+        """
         random.shuffle(cards)
         return cards
 
     @classmethod
     def get_mixed_dek(cls):
+        """
+        Returns mixed Card Dek
+
+        :return: CardDek object with mixed cards
+        """
         return cls(cards=cls.mix([CardBase(i) for i in range(33)]))
 
 
 class PlayerDek:
     def __init__(self, name: str, cards: list[CardBase | None] = []):
+        """
+        A Dek of a player Including Cards, and the name of the player
+
+        :param name: The name of the player
+        :param cards: The List of cards the player owns
+        """
         self.name: str = name
         self.cards: list[CardBase] = cards
 
@@ -113,11 +140,21 @@ class PlayerDek:
         return len(self.cards) > other
 
     def append(self, obj):
-        self.cards.append(obj)
+        if isinstance(obj, list):
+            for ob in obj:
+                self.cards.append(ob)
+        else:
+            self.cards.append(obj)
 
 
 class GameDek:
     def __init__(self, card_dek: CardDek, players_dek: list[PlayerDek]):
+        """
+        Create A dek of cards including the dek of every player and the other cards of the dek
+
+        :param card_dek: The Dek of cards not belonging to anyone
+        :param players_dek: A list of Player-Deks
+        """
         self.players_dek: list[PlayerDek] = players_dek
         self.card_dek: CardDek = card_dek
 
@@ -129,15 +166,32 @@ class GameDek:
         return f"<GameDek player={len(self.players)}, players_dek={self.players_dek}, card_dek={len(self.card_dek)}>"
 
     @staticmethod
-    def deal(dek: CardDek, players: list[str], cards: int = 5) -> list[PlayerDek] | None:
+    def deal(dek: CardDek, players: list[str | PlayerDek], cards: int = 5) -> list[PlayerDek] | None:
+        """
+        Deal an amount of cards to several Players
+
+        :param dek: The Dek of cards
+        :param players:
+        :param cards:
+        :return:
+        """
         p_dek = []
         for pl in players:
-            pdek = PlayerDek(pl, [CardBase(i) for i in dek.deal_top_card(5)])
-            p_dek.append(pdek)
+            if isinstance(pl, PlayerDek):
+                pl.cards = [CardBase(i) for i in dek.deal_top_card(cards)]
+            else:
+                p_dek.append(PlayerDek(pl, [CardBase(i) for i in dek.deal_top_card(cards)]))
         return p_dek
 
     @classmethod
     def create_dek(cls, players: list[str]):
+        """
+        Create a Game Dek with the names of the Players
+        The Dek includes 5 Cards for every Player and a mixed dek
+
+        :param players: The names of the Player
+        :return: A New Game Dek
+        """
         if len(players) != 4:
             return None
         dek = CardDek.get_mixed_dek()
