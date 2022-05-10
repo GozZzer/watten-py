@@ -1,7 +1,7 @@
 import math
 
 
-def convert_to_readable(card_id: int):
+def convert_to_readable(card_id):
     """
     The card is represented by an id.
     This function converts the id to a readable representation
@@ -14,4 +14,4 @@ def convert_to_readable(card_id: int):
 
     col = ["Schell", "Herz", "Eichel", "Laub"]
     num = ["VII", "VIII", "IX", "X", "Unter", "Ober", "König", "Sau"]
-    return col[math.floor(card_id/8)], num[(card_id % 8)]
+    return col[math.floor(int(card_id)/8)], num[(int(card_id) % 8)]
