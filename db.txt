@@ -1,0 +1,34 @@
+Player:
+    player_id int auto increment
+    nickname char None
+    username char not None
+    email char not None
+    password char not None
+    create table "Player"
+        (
+        player_id serial
+            constraint player_pk
+                primary key,
+        nickname  char,
+        email     char not null,
+        username  char not null,
+        password  char not null
+        );
+
+Game:
+    game_id int auto increment
+    player _Player
+    team_1 _Player
+    team_2 _Player
+    score_team_1 int
+    score_team_2 int
+    winner _Player
+    loser _Player
+    started datetime
+    ended datetime
+
+GameSet:
+    set_id int auto increment
+    game_ids _Game
+    set_score_team_1 int
+    set_score_team_2 int
